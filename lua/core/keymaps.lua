@@ -14,12 +14,9 @@ map("n", "<C-k>", "<C-w>k", { desc = "Move to split above" })
 map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer tab" })
 map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer tab" })
 
--- build and jump to errors
-map("n", "<leader>m", "<cmd>make<cr>", { desc = "Build" })
--- navigate quickfix errors
-map("n", "<leader>cn", "<cmd>cnext<cr>", { desc = "Next error" })
-map("n", "<leader>cp", "<cmd>cprev<cr>", { desc = "Prev error" })
-map("n", "<leader>cc", "<cmd>cclose<cr>", { desc = "Close quickfix" })
+-- -- build and jump to errors
+map("n", "]e", "<cmd>cnext<cr>", { desc = "Next error" })
+map("n", "[e", "<cmd>cprev<cr>", { desc = "Prev error" })
 
 -- open terminal below code only, not affecting neo-tree
 map("n", "<C-/>", function()
@@ -29,3 +26,9 @@ map("n", "<C-/>", function()
   end
   vim.cmd("ToggleTerm")
 end, { desc = "Toggle terminal" })
+
+-- Delete all buffers except the current one
+vim.keymap.set("n", "<leader>ba", "<cmd>%bd|e#|bd#<CR>", { desc = "Close all other buffers" })
+-- Nuke all buffers completely
+vim.keymap.set("n", "<leader>bA", "<cmd>%bd<CR>", { desc = "Close all buffers" })
+vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Close current buffer" })
