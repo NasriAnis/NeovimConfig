@@ -61,12 +61,12 @@ vim.opt.listchars = {
 -- ============================================================
 
 -- Rounded borders on all LSP floating windows
-local orig_open_floating_preview = vim.lsp.util.open_floating_preview
-function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-  opts = opts or {}
-  opts.border = opts.border or "rounded"
-  return orig_open_floating_preview(contents, syntax, opts, ...)
-end
+-- local orig_open_floating_preview = vim.lsp.util.open_floating_preview
+-- function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+--   opts = opts or {}
+--   opts.border = opts.border or "rounded"
+--   return orig_open_floating_preview(contents, syntax, opts, ...)
+-- end
 
 -- ============================================================
 -- MISC
@@ -77,3 +77,5 @@ vim.deprecate = function() end -- silence deprecation warnings
 -- Disable netrw so neo-tree handles directories
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+
+vim.opt.hidden = true
