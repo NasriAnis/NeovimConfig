@@ -49,7 +49,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- :Build — auto-detects Cargo.toml or Makefile from cwd
-vim.api.nvim_create_user_command("Build", function()
+vim.api.nvim_create_user_command("B", function()
   local cargo_toml = vim.fs.find("Cargo.toml", {
     upward = true,
     path = vim.fn.getcwd(),

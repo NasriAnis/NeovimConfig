@@ -55,7 +55,7 @@ return {
     -- ============================================================
     
     -- :Session — Loads your saved workspaces safely
-    vim.api.nvim_create_user_command("Session", function()
+    vim.api.nvim_create_user_command("Sess", function()
       local success, files = pcall(vim.fn.readdir, session_dir)
       if not success or #files == 0 then
         vim.notify("No sessions found", vim.log.levels.WARN)
@@ -79,7 +79,7 @@ return {
     end, {})
 
     -- :SessionDelete — Clean up old, unwanted files safely
-    vim.api.nvim_create_user_command("SessionDelete", function()
+    vim.api.nvim_create_user_command("SessDelete", function()
       local success, files = pcall(vim.fn.readdir, session_dir)
       if not success or #files == 0 then
         vim.notify("No sessions found to delete", vim.log.levels.WARN)
