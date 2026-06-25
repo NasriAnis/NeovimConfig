@@ -46,7 +46,16 @@ return {
         },
       })
 
-      vim.lsp.config("clangd", {})
+      vim.lsp.config("clangd", {
+        cmd = {
+    "clangd",
+    "--background-index",
+    "--clang-tidy",
+    "--header-insertion=iwyu",
+    "--completion-style=detailed",
+    "--fallback-style=llvm",
+  },
+})
       vim.lsp.config("pyright", {})
 
       vim.lsp.enable({ "lua_ls", "clangd", "pyright" })

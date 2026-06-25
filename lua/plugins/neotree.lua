@@ -8,6 +8,7 @@ return {
   },
   lazy = false,
   opts = {
+    close_if_last_window = false,
       hijack_netrw_behavior = "open_current",
     window = {
       position = "left",
