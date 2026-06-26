@@ -10,23 +10,46 @@ return {
       server = {
         settings = {
           ["rust-analyzer"] = {
-            checkOnSave = true,
-            check = {
-              command = "clippy",
+            checkOnSave = false,
+      
+            diagnostics = {
+              enable = false,
             },
+      
             cargo = {
               allFeatures = true,
             },
+      
             procMacro = {
               enable = true,
             },
-            diagnostics = {
-              enable = true,
-              experimental = { enable = true },
+      
+            inlayHints = {
+              enable = false,
             },
           },
         },
       },
+      -- server = {
+      --   settings = {
+      --     ["rust-analyzer"] = {
+      --       checkOnSave = true,
+      --       check = {
+      --         command = "clippy",
+      --       },
+      --       cargo = {
+      --         allFeatures = true,
+      --       },
+      --       procMacro = {
+      --         enable = true,
+      --       },
+      --       diagnostics = {
+      --         enable = true,
+      --         experimental = { enable = true },
+      --       },
+      --     },
+      --   },
+      -- },
     }
   end,
 }
