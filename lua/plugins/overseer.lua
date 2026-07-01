@@ -12,22 +12,6 @@ return {
           max_height     = 15,
           default_detail = 2,
         },
-        -- vim.api.nvim_create_autocmd("FileType", {
-        --   pattern = { "overseer", "OverseerOutput" },
-        --   callback = function()
-        --     vim.keymap.set("n", "gf", function()
-        --       local line = vim.api.nvim_get_current_line()
-        --       line = line:gsub("\27%[[%d;]*m", "")
-        --       local path = line:match("([%w%.%-%_/]+%.%w+:%d+[:%d]*)")
-        --       if not path then return end
-        
-        --       -- wincmd p = jump to previous (code) window, then let vim-fetch open it
-        --       vim.cmd("wincmd p")
-        --       vim.cmd("wincmd k")
-        --       vim.cmd("edit " .. vim.fn.fnameescape(path))
-        --     end, { buffer = true, silent = true })
-        --   end,
-        -- })
         vim.api.nvim_create_autocmd("FileType", {
           pattern = { "overseer", "OverseerOutput" },
           callback = function()
@@ -41,7 +25,7 @@ return {
               col  = tonumber(col)  or 1
         
               -- find the first window that is neither overseer nor neotree
-              local ignored = { overseer = true, OverseerOutput = true, ["neo-tree"] = true }
+              local ignored = { overseer = true, OverseerOutput = true, ["NvimTree"] = true }
               for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
                 local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
                 if not ignored[ft] then

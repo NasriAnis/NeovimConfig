@@ -10,127 +10,55 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
   end,
 })
 
--- better one but can cause throttles
--- local autosave_group = vim.api.nvim_create_augroup("AutosaveGroup", { clear = true })
--- local timer = vim.loop.new_timer()
-
--- vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "InsertLeave" }, {
---   group = autosave_group,
---   pattern = "*",
---   callback = function()
---     if vim.bo.modified and vim.bo.buftype == "" and vim.fn.expand("%") ~= "" and vim.bo.modifiable then
---       -- Debounce the write: Wait 500ms after the last change before saving
---       timer:start(500, 0, vim.schedule_wrap(function()
---         if vim.api.nvim_buf_is_valid(0) and vim.bo.modified then
---           vim.cmd("silent! write")
---         end
---       end))
---     end
---   end,
--- })
-
 -- ============================================================
--- BUILD SYSTEM
+-- Terminal
 -- ============================================================
+local term_bufnr = nil
+local prev_bufnr = nil
 
--- Rust: set makeprg to cargo when entering a rust file
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "rust",
---   callback = function()
---     local root = vim.fs.find("Cargo.toml", {
---       upward = true,
---       path = vim.fn.expand("%:p:h"),
---     })[1]
---     if root then
---       local root_dir = vim.fn.fnamemodify(root, ":h")
---       vim.opt_local.makeprg = "cargo build --manifest-path " .. root_dir .. "/Cargo.toml --message-format=short 2>&1"
---     else
---       vim.opt_local.makeprg = "cargo build --message-format=short 2>&1"
---     end
---   end,
--- })
+local function toggle_term()
+  local cur_buf = vim.api.nvim_get_current_buf()
 
--- -- C/C++: set makeprg to make when entering a c/cpp file
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = { "c", "cpp", "make" },
---   callback = function()
---     local makefile = vim.fs.find({ "Makefile", "makefile", "GNUmakefile" }, {
---       upward = true,
---       path = vim.fn.expand("%:p:h"),
---     })[1]
---     if makefile then
---       local root_dir = vim.fn.fnamemodify(makefile, ":h")
---       vim.opt_local.makeprg = "make -C " .. root_dir .. " 2>&1"
---     else
---       vim.opt_local.makeprg = "make 2>&1"
---     end
---   end,
--- })
+  -- If we're already in the terminal, go back to previous buffer
+  if cur_buf == term_bufnr then
+    if prev_bufnr and vim.api.nvim_buf_is_valid(prev_bufnr) then
+      vim.api.nvim_set_current_buf(prev_bufnr)
+    else
+      vim.cmd("bprevious")
+    end
+    return
+  end
 
--- -- :Build — auto-detects Cargo.toml or Makefile from cwd
--- vim.api.nvim_create_user_command("B", function()
---   local cargo_toml = vim.fs.find("Cargo.toml", {
---     upward = true,
---     path = vim.fn.getcwd(),
---   })[1]
---   local makefile = vim.fs.find({ "Makefile", "makefile", "GNUmakefile" }, {
---     upward = true,
---     path = vim.fn.getcwd(),
---   })[1]
+  -- Save where we are before jumping
+  prev_bufnr = cur_buf
 
---   if cargo_toml then
---     local root_dir = vim.fn.fnamemodify(cargo_toml, ":h")
---     vim.opt.makeprg = "cargo build --manifest-path " .. root_dir .. "/Cargo.toml --message-format=short 2>&1"
---     vim.cmd("make")
---   elseif makefile then
---     local root_dir = vim.fn.fnamemodify(makefile, ":h")
---     vim.opt.makeprg = "make -C " .. root_dir .. " 2>&1"
---     vim.cmd("make")
---   else
---     vim.notify("No Cargo.toml or Makefile found", vim.log.levels.WARN)
---   end
--- end, {})
+  -- Reuse existing terminal buffer if alive
+  if term_bufnr and vim.api.nvim_buf_is_valid(term_bufnr) then
+    vim.api.nvim_set_current_buf(term_bufnr)
+    vim.cmd("startinsert")
+    return
+  end
 
--- ============================================================
--- QUICKFIX
--- ============================================================
+  -- Create a new terminal buffer
+  vim.cmd("enew")
+  vim.cmd("terminal")
+  term_bufnr = vim.api.nvim_get_current_buf()
 
--- -- Auto open quickfix on errors, close it if none
--- vim.api.nvim_create_autocmd("QuickFixCmdPost", {
---   callback = function()
---     local qflist = vim.fn.getqflist()
---     local has_errors = false
---     for _, item in ipairs(qflist) do
---         if item.valid == 1 then
---         has_errors = true
---         break
---       end
---     end
---     if has_errors then
---       vim.cmd("copen 15")
---     else
---       vim.cmd("cclose")
---     end
---   end,
--- })
+  -- Don't list it in bufferline
+  vim.bo[term_bufnr].buflisted = false
 
--- -- :Next and :Prev to navigate quickfix errors
--- vim.api.nvim_create_user_command("Next", function()
---   vim.cmd("cnext")
--- end, {})
+  vim.wo.number = false
+  vim.wo.relativenumber = false
 
--- vim.api.nvim_create_user_command("Prev", function()
---   vim.cmd("cprev")
--- end, {})
+  vim.api.nvim_buf_attach(term_bufnr, false, {
+    on_detach = function()
+      term_bufnr = nil
+      prev_bufnr = nil
+    end,
+  })
 
--- ============================================================
--- SESSION
--- ============================================================
+  vim.cmd("startinsert")
+end
 
--- Close neo-tree before session saves so it doesn't restore broken
-vim.api.nvim_create_autocmd("VimLeavePre", {
-  callback = function()
-    pcall(vim.cmd, "Neotree close")
-  end,
-})
-
+vim.keymap.set("n", "<C-t>", toggle_term, { desc = "Toggle terminal" })
+vim.keymap.set("t", "<C-t>", toggle_term, { desc = "Toggle terminal" })

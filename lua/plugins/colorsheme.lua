@@ -27,41 +27,5 @@ return{
 
     vim.cmd.colorscheme("dracula")
   end,
-},
---
--- {
---     "rebelot/kanagawa.nvim",
---     lazy = false,
---     priority = 1000,
---     config = function()
---       require("kanagawa").setup({
---         theme = "dragon", -- or "wave" depending on which variant you chose
---         transparent = false,
---         overrides = function(colors)
---           return {
---             Normal = { bg = "#000000" },
---             NormalFloat = { bg = "#000000" },
---             SignColumn = { bg = "#000000" },
---             StatusLine = { bg = "#000000" },
---             NeoTreeNormal = { bg = "#000000" },       -- Keeps your file tree pure black
---             NeoTreeNormalNC = { bg = "#000000" },     -- Keeps inactive file tree pure black
---           }
---         end,
---       })
---       vim.cmd("colorscheme kanagawa")
---     end,
---   },
-  -- {
-  --   "WTFox/jellybeans.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   opts = {
-  --     style = "high_contrast", -- Turns background pure black natively
-  --     transparent = false,
-  --   },
-  --   config = function(_, opts)
-  --     require("jellybeans").setup(opts)
-  --     vim.cmd("colorscheme jellybeans")
-  --   end,
-  -- }
+  }
 }
