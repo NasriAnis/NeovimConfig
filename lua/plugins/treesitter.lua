@@ -8,9 +8,12 @@ return {
 
     configs.setup({
       ensure_installed = {
-        "lua", "rust", "c", "python",
-        "bash", "json", "toml", "yaml",
-        "markdown", "vim", "vimdoc",
+        -- Core & Config
+        "lua", "vim", "vimdoc", "bash", "json", "toml", "yaml", "markdown", "markdown_inline",
+        -- Low Level & General
+        "c", "cpp", "rust", "python",
+        -- Web / TSX
+        "javascript", "typescript", "tsx", "html", "css",
       },
       highlight = { enable = true },
       indent = { enable = true },

@@ -4,7 +4,13 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   lazy = false,
   opts = {
-    hijack_netrw = true,
+      hijack_netrw = true,
+      update_focused_file = {
+          enable = true,
+          update_root = false,   -- set true if you also want the tree's root to jump to the file's project root
+          ignore_list = {},
+      },
+    -- hijack_netrw = true,
     view = {
       width = 30,
       side = "left",
